@@ -1,6 +1,7 @@
 import React from 'react';
 import css from './ImageGallery.module.css';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import PropTypes from 'prop-types';
 
 export function ImageGallery({ dates }) {
   return (
@@ -13,3 +14,7 @@ export function ImageGallery({ dates }) {
     </ul>
   );
 }
+
+ImageGallery.propTypes = {
+  dates: PropTypes.array({ id: PropTypes.number, date: PropTypes.array }),
+};

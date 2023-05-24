@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FaSearch } from 'react-icons/fa';
 import css from './LoginFoarm.module.css';
 import * as yup from 'yup';
+import PropTypes from 'prop-types';
 
 const schema = yup.object().shape({
   search: yup.string().min(2).required(),
@@ -42,3 +43,7 @@ export function LoginFoarm({ submitForm }) {
     </Formik>
   );
 }
+
+LoginFoarm.propTypes = {
+  submitForm: PropTypes.func.isRequired,
+};
