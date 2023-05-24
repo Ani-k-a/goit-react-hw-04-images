@@ -1,11 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import css from './ImageGallery.module.css';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
-export default class ImageGallery extends Component {
-  componentDidUpdate(prevProps, prevState) {
-    // if(prevProps.search)
-  }
-  render() {
-    return <ul className={css.gallery}></ul>;
-  }
+export function ImageGallery({ dates }) {
+  return (
+    <ul className={css.gallery}>
+      {dates.map(date => (
+        <li key={date.id} className={css.item}>
+          <ImageGalleryItem date={date}></ImageGalleryItem>
+        </li>
+      ))}
+    </ul>
+  );
 }
