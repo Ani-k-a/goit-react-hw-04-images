@@ -35,7 +35,6 @@ export class ImageGalleryItem extends Component {
     const { date } = this.props;
     const { webformatURL, user, largeImageURL } = date;
     const { isModalOpen } = this.state;
-    console.log(user);
     return (
       <>
         <img
@@ -57,7 +56,7 @@ export class ImageGalleryItem extends Component {
 }
 
 ImageGalleryItem.propTypes = {
-  webformatURL: PropTypes.string.isRequired,
-  user: PropTypes.string.isRequired,
-  largeImageURL: PropTypes.isRequired,
+  webformatURL: PropTypes.string,
+  user: PropTypes.string,
+  largeImageURL: PropTypes.string,
 };

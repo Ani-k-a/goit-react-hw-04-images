@@ -28,14 +28,27 @@ export class App extends Component {
     const nextSeach = this.state.search;
     const prevPage = prevState.page;
     const nextPage = this.state.page;
-    const page = this.state.page;
 
-    if (prevSearch !== nextSeach || prevPage !== nextPage) {
+    if (prevSearch !== nextSeach) {
       this.setState({ status: 'pending' });
-      API.fetchImages(nextSeach, page)
+      API.fetchImages(nextSeach, nextPage)
         .then(gallery => {
           if (gallery.length !== 0) {
             this.setState({ gallery, status: 'resolved' });
+          } else this.setState({ status: 'rejected' });
+        })
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+    if (prevPage !== nextPage) {
+      this.setState({ status: 'pending' });
+      API.fetchImages(nextSeach, nextPage)
+        .then(gallery => {
+          if (gallery.length !== 0) {
+            this.setState({ status: 'resolved' });
+            this.setState(prevState => {
+              return { gallery: [...prevState.gallery, ...gallery] };
+            });
+            console.log(this.state);
           } else this.setState({ status: 'rejected' });
         })
         .catch(error => this.setState({ error, status: 'rejected' }));
@@ -60,7 +73,7 @@ export class App extends Component {
         {status === 'resolved' && (
           <>
             <ImageGallery dates={gallery} page={page}></ImageGallery>
-            {gallery.length === 12 && (
+            {gallery.length % 12 === 0 && (
               <Button onLoadMoreClick={this.onLoadMoreClick} />
             )}
           </>

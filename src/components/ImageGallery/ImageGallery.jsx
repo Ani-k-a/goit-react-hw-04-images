@@ -16,5 +16,5 @@ export function ImageGallery({ dates }) {
 }
 
 ImageGallery.propTypes = {
-  dates: PropTypes.array({ id: PropTypes.number, date: PropTypes.array }),
+  dates: PropTypes.array,
 };
