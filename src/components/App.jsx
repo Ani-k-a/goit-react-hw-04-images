@@ -25,8 +25,7 @@ export function App() {
   useEffect(() => {
     if (search === '') {
       return;
-    }
-    setStatus('pending');
+    } else setStatus('pending');
     API.fetchImages(search, page)
       .then(gallerySet => {
         if (gallerySet.length !== 0) {
@@ -35,7 +34,6 @@ export function App() {
           } else {
             setGallery(prevState => [...prevState, ...gallerySet]);
           }
-
           setStatus('resolved');
         } else setStatus('rejected');
       })
