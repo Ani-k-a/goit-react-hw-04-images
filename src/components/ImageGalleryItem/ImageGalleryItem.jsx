@@ -1,58 +1,52 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import css from './ImageGalleryItem.module.css';
 import { Modal } from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    isModalOpen: false,
+export function ImageGalleryItem({ date }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { webformatURL, user, largeImageURL } = date;
+
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  openModal = () => {
-    this.setState({ isModalOpen: true });
-    console.log(this.state);
-  };
-  closeModal = ev => {
+  const closeModal = ev => {
     if (ev.currentTarget === ev.target) {
-      this.setState({ isModalOpen: false });
+      setIsModalOpen(false);
     }
   };
-  handleKeydown = ev => {
+
+  const handleKeydown = ev => {
     if (ev.code === 'Escape') {
-      this.setState({ isModalOpen: false });
+      setIsModalOpen(false);
     }
   };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeydown);
-  }
+  useEffect(() => {
+    isModalOpen
+      ? window.addEventListener('keydown', handleKeydown)
+      : window.removeEventListener('keydown', handleKeydown);
+  }, [isModalOpen]);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeydown);
-  }
-
-  render() {
-    const { date } = this.props;
-    const { webformatURL, user, largeImageURL } = date;
-    const { isModalOpen } = this.state;
-    return (
-      <>
-        <img
-          onClick={this.openModal}
-          className={css.image}
-          src={webformatURL}
-          alt={user}
-        />
-        {isModalOpen && (
-          <Modal
-            largeImageURL={largeImageURL}
-            user={user}
-            onClick={this.closeModal}
-          ></Modal>
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      <img
+        onClick={openModal}
+        className={css.image}
+        src={webformatURL}
+        alt={user}
+      />
+      {isModalOpen && (
+        <Modal
+          largeImageURL={largeImageURL}
+          user={user}
+          onClick={closeModal}
+        ></Modal>
+      )}
+    </>
+  );
 }
 
 ImageGalleryItem.propTypes = {

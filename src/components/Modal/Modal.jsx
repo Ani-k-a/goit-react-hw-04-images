@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export function Modal({ user, largeImageURL, onClick }) {
   return (
     <div className={css.overlay} onClick={onClick}>
-      <div classNmae={css.modal}>
+      <div className={css.modal}>
         <img src={largeImageURL} alt={user} />
       </div>
     </div>

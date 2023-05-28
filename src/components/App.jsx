@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import css from './App.module.css';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Toaster } from 'react-hot-toast';
@@ -9,77 +9,60 @@ import { Loader } from './Loader/Loader';
 import { ImageErrorViev } from './ImageErrorViev/ImageErrorViev';
 import { Button } from './Button/Button';
 
-export class App extends Component {
-  state = {
-    search: '',
-    page: 1,
-    gallery: [],
-    status: 'idle',
-  };
-  handleFoarmSubmit = search => {
-    this.setState({ ...search, page: 1 });
-  };
-  onLoadMoreClick = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+export function App() {
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [gallery, setGallery] = useState([]);
+  const [status, setStatus] = useState('idle');
+
+  const handleFoarmSubmit = search => {
+    setPage(1);
+    setSearch(search);
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevSearch = prevState.search;
-    const nextSeach = this.state.search;
-    const prevPage = prevState.page;
-    const nextPage = this.state.page;
+  const onLoadMoreClick = () => setPage(prevState => prevState + 1);
 
-    if (prevSearch !== nextSeach) {
-      this.setState({ status: 'pending' });
-      API.fetchImages(nextSeach, nextPage)
-        .then(gallery => {
-          if (gallery.length !== 0) {
-            this.setState({ gallery, status: 'resolved' });
-          } else this.setState({ status: 'rejected' });
-        })
-        .catch(error => this.setState({ error, status: 'rejected' }));
+  useEffect(() => {
+    if (search === '') {
+      return;
     }
-    if (prevPage !== nextPage) {
-      this.setState({ status: 'pending' });
-      API.fetchImages(nextSeach, nextPage)
-        .then(gallery => {
-          if (gallery.length !== 0) {
-            this.setState({ status: 'resolved' });
-            this.setState(prevState => {
-              return { gallery: [...prevState.gallery, ...gallery] };
-            });
-            console.log(this.state);
-          } else this.setState({ status: 'rejected' });
-        })
-        .catch(error => this.setState({ error, status: 'rejected' }));
-    }
-  }
+    setStatus('pending');
+    API.fetchImages(search, page)
+      .then(gallerySet => {
+        if (gallerySet.length !== 0) {
+          if (page === 1) {
+            setGallery(gallerySet);
+          } else {
+            setGallery(prevState => [...prevState, ...gallerySet]);
+          }
 
-  render() {
-    const { gallery, page, status } = this.state;
+          setStatus('resolved');
+        } else setStatus('rejected');
+      })
+      .catch(error => setStatus('rejected'));
+  }, [search, page]);
 
-    return (
-      <>
-        <Searchbar>
-          <LoginFoarm submitForm={this.handleFoarmSubmit} />
-        </Searchbar>
-        {status === 'idle' && (
-          <div className={css.notify}>Please, enter your query</div>
-        )}
-        {status === 'pending' && <Loader />}
-        {status === 'rejected' && (
-          <ImageErrorViev message="There are no results for your search" />
-        )}
-        {status === 'resolved' && (
-          <>
-            <ImageGallery dates={gallery} page={page}></ImageGallery>
-            {gallery.length % 12 === 0 && (
-              <Button onLoadMoreClick={this.onLoadMoreClick} />
-            )}
-          </>
-        )}
-        <Toaster />
-      </>
-    );
-  }
+  return (
+    <>
+      <Searchbar>
+        <LoginFoarm submitForm={handleFoarmSubmit} />
+      </Searchbar>
+      {status === 'idle' && (
+        <div className={css.notify}>Please, enter your query</div>
+      )}
+      {status === 'pending' && <Loader />}
+      {status === 'rejected' && (
+        <ImageErrorViev message="There are no results for your search" />
+      )}
+      {status === 'resolved' && (
+        <>
+          <ImageGallery dates={gallery} page={page}></ImageGallery>
+          {gallery.length % 12 === 0 && (
+            <Button onLoadMoreClick={onLoadMoreClick} />
+          )}
+        </>
+      )}
+      <Toaster />
+    </>
+  );
 }
