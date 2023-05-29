@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import css from './App.module.css';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Toaster } from 'react-hot-toast';
-import { LoginFoarm } from './LoginFoarm/LoginFoarm';
+import { SubmitFoarm } from './SubmitFoarm/SubmitFoarm';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import * as API from 'services/api';
 import { Loader } from './Loader/Loader';
@@ -43,7 +43,7 @@ export function App() {
   return (
     <>
       <Searchbar>
-        <LoginFoarm submitForm={handleFoarmSubmit} />
+        <SubmitFoarm submitForm={handleFoarmSubmit} />
       </Searchbar>
       {status === 'idle' && (
         <div className={css.notify}>Please, enter your query</div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FaSearch } from 'react-icons/fa';
-import css from './LoginFoarm.module.css';
+import css from './SubmitFoarm.module.css';
 import * as yup from 'yup';
 import PropTypes from 'prop-types';
 
@@ -12,9 +12,11 @@ const schema = yup.object().shape({
 const initialValues = {
   search: '',
 };
-export function LoginFoarm({ submitForm }) {
+export function SubmitFoarm({ submitForm }) {
   const handleSubmit = (values, { resetForm }) => {
-    submitForm(values);
+    const { search } = values;
+    console.log(search);
+    submitForm(search);
     resetForm();
   };
   return (
@@ -44,6 +46,6 @@ export function LoginFoarm({ submitForm }) {
   );
 }
 
-LoginFoarm.propTypes = {
+SubmitFoarm.propTypes = {
   submitForm: PropTypes.func.isRequired,
 };
